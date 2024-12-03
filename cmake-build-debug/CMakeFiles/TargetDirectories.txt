@@ -1,0 +1,3 @@
+/home/neme/Projects/C++/doshell/cmake-build-debug/CMakeFiles/doshell.dir
+/home/neme/Projects/C++/doshell/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/neme/Projects/C++/doshell/cmake-build-debug/CMakeFiles/rebuild_cache.dir
