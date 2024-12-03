@@ -101,3 +101,16 @@ Expr parsecmdl(std::string cmdl) {
     }
     return expression;
 }
+
+int execCmds(Expr &expression)
+{
+	int pipes[expression.cmds.size()-1][2] = {};
+	int READ_END = 0;
+	int WRITE_END = 1;
+	int outputFileid = -1;
+	int inputFileid = -1;
+	if (expression.outputToFile != "")
+	{
+		outputFileid = open(expression.outputToFile.c_str(), O_CREAT | O_WRONLY, 0777);
+	}
+}
