@@ -112,5 +112,45 @@ int execCmds(Expr &expression)
 	if (expression.outputToFile != "")
 	{
 		outputFileid = open(expression.outputToFile.c_str(), O_CREAT | O_WRONLY, 0777);
+		if (outputFileid < 0)
+		{
+			std::cout << "Opening file failed." << '\n';
+		}
 	}
+		if (expression.inputFromFile != "")
+		{
+			inputFileid = open(expression.inputFromFile.c_str(), O_RDONLY, S_IRUSR);
+			if (inputFileid < 0)
+			{
+				std::cout << "Opening file failed/does not exist" << '\n';
+			}
+		}
+		for (int i = 0; i < expression.cmds.size(); i++)
+		{
+			bool isFirst = i == 0;
+			bool isLast = i == expression.cmds.size() - 1;
+			if (expression.cmds[i].parts[0] == "exit")
+			{
+				std::cout << "Exited sucessfully" << '\n';
+				exit(EXIT_SUCESS);
+			}
+			else if (expression.cmds[i].parts[0] == "cd")
+			{
+				int ch = chdir(expression.cmds[i].parts[1].c_str());
+				if (ch < 0)
+				{
+					std::cout << "Changing dir not succ" << '\n';
+				}
+				break;
+			}
+			else 
+			{
+				if(pipe(pipes[i]))
+				{
+					std::cout << "Creating pipe failed" << '\n';
+					break;
+				}
+				pid_t child1 = fork();
+			}
+		}
 }
