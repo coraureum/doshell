@@ -1,6 +1,7 @@
-#include <iostream>
+extern int shell(bool prompt);
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+int main (int argc, char** argv) 
+{
+	bool showPrompt = argc == 1;
+	return shell (showPrompt);
 }
