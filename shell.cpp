@@ -151,6 +151,66 @@ int execCmds(Expr &expression)
 					break;
 				}
 				pid_t child1 = fork();
+				if (child1 == -1){
+					std::cout << "Creating child process failed.";
+					break;
+				}
+				if (child1 == 0)
+				{
+					bool fileWasHandled = false;
+					if (isFirst && inputFileid >=0){
+						dup2(inputFileid, STDIN_FILENO);
+						if(expression.cmds.size() > 1)
+						{
+							dup2(pipes[i][WRITE_END], STDOUT_FILENO);
+						}
+						close(pipes[i][READ_END]);
+						close(pipes[i][WRITE_END]);
+						close(inputFileid);
+						fileWasHandled = true;
+					}
+					if(isLast && outputFileid >=0)
+					{
+						if(!isFirst){
+						close(pipes[i - 1][WRITE_END]);
+						dup2(pipes[i - 1][READ_END], STDIN_FILENO);
+						close(pipes[i - 1][READ_END]);
+
+						}
+						else {
+							close(pipes[i][READ_END]);
+							close(pipes[i][WRITE_END]);
+						}
+						dup2(outputFileid, STDOUT_FILENO);
+						close(outputFileid);
+						fileWasHandled = true;
+					}
+					if (!fileWasHandled)						{
+						if(!isFirst)
+						{
+							close(pipe[i - 1][WRITE_END]);
+							dup2(pipes[i - 1][READ_END], STDIN_FILENO);
+							close(pipe[i - 1][READ_END]);
+						}
+						if (!isLast)
+
+						{
+							close(pipe[i][READ_END]);
+							dup2(pipes[i][WRITE_END, STDOUT_FILENO]);
+							close(pipes[i][WRITE_END]);
+						}
 			}
+					execmd(expression.cmds[i]);
+					abort();
 		}
+				if (!isFirst)
+				{
+					close(pipes[i - 1][READ_END]);
+					close(pipes[i - 1][WRITE_END]);
+				}
+				waitpid(child1, nullptr, 0);
+				}
+		}
+}
+return 0;
 }
