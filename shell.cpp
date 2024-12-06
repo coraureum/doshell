@@ -1,3 +1,4 @@
+#include <cstring>
 #include <iostream>
 #include <fcntl.h>
 #include <unistd.h>
@@ -211,6 +212,41 @@ int execCmds(Expr &expression)
 				waitpid(child1, nullptr, 0);
 				}
 		}
+
+	return 0;
+
 }
-return 0;
+int executeExpression(Expr &expression)
+{
+	if (expression.cmds.size() == 0)
+		return EINVAL;
+	if (expression.background)
+	{
+		pid_t pid = fork();
+		if (pid == -1)
+		{
+			std::cout << "Cmd exec in bg not possible";
+		}
+		else if (pid == 0)
+		{
+			return execCmds(expression);
+		}
+	}
+	else {
+		return execCmds(expression);
+	}
+	return 0;
+}
+int normal(bool showPrompt)
+{
+	while(std::cin.good())
+	{
+		std::string cmdl = reqstcmdl(showPrompt);
+		Expr expression = parsecmdl(cmdl);
+
+		int rc = executeExpression(expression);
+		if (rc!=0)
+			std::cer << std::strerror(rc) << '\n';
+	}
+	return 0;
 }
