@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <fcntl.h>
@@ -249,4 +250,32 @@ int normal(bool showPrompt)
 			std::cer << std::strerror(rc) << '\n';
 	}
 	return 0;
+}
+
+int step1(bool showPrompt)
+{
+	int mypipe[2];
+	if (pipe(mypipe))
+	{
+		std::printf(std::error, "Pipe failed.\n");
+		return EXIT_FAILURE;
+	}
+	pid_t child2 = fork();
+	if (child2 == 0)
+	{
+		close(mypipe[0]);
+		dup2(mypipe[1], STDOUT_FILENO);
+		Cmd cmd = {{std::string("date")}};
+		execmd(cmd);
+		abort();
+	}
+	close(mypipe[0]);
+	close(mypipe[1]);
+	waitpid(child1, nullptr, 0);
+	waitpid(child2, nullptr, 0);
+	return 0;
+}
+int shell (bool showPrompt)
+{
+	return normal(showPrompt);
 }
